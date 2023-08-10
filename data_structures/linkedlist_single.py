@@ -70,6 +70,7 @@ class SingleLinkedList:
         return out.val
         
     def popLeft(self):
+        if not self.head: return None
         out = self.head
         self.head = self.head.next
         return out.val
