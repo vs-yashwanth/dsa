@@ -173,8 +173,143 @@ class SingleLinkedList:
             if slow == fast:
                 return True
         return False
-   
-   
+    
+    def sortedInsert(self, val):
+        node = Node(val)
+        cur = self.head
+        if not cur:
+            self.push(val)
+            return
+        if cur.val >= val:
+            self.pushLeft(val)
+            return
+        while cur and cur.next:
+            if cur.val < val <= cur.next.val:
+                node.next = cur.next
+                cur.next = node
+                return
+            cur = cur.next
+        self.push(val)
+        return
+    
+    def reverseInPairs(self):
+        cur = self.head
+        if not cur: return
+        prev = None
+        nxt = cur.next
+        while nxt:
+            cur.next = nxt.next
+            nxt.next = cur
+            if prev: prev.next = nxt
+            else: self.head = nxt
+            prev = cur
+            cur = cur.next
+            if cur: nxt = cur.next
+            else: nxt = None
+
+    def isPalindrome(self):
+        cur = self.head
+        if not cur: return False
+        length = self.length()
+        if length == 1: return True
+        slow = cur
+        fast = cur
+        while True:
+            if not fast.next or not fast.next.next:
+                break
+            slow = slow.next
+            fast = fast.next.next
+        mid = slow
+        ll2 = SingleLinkedList()
+        ll2.head = mid.next
+        mid.next = None
+        ll2.reverse()
+ 
+        cur2 = ll2.head
+        for _ in range(ll2.length()):
+            if cur.val != cur2.val:
+                return False
+            cur = cur.next
+            cur2 = cur2.next
+        return True
+    
+    def reverse_k(self,k):
+        head = self.head
+        if not head or not head.next or k < 2:
+            return head
+        
+        dummy = Node(0)
+        dummy.next = head
+        prev_group = dummy
+
+        while True:
+            cur_group = prev_group.next
+            cur = cur_group
+            prev = None
+            count = 0
+
+            while cur and count < k:
+                cur = cur.next
+                count += 1
+            
+            if count == k:
+                cur = cur_group
+                for _ in range(k):
+                    nxt = cur.next
+                    cur.next = prev
+                    prev = cur
+                    cur = nxt
+                
+                prev_group.next = prev
+                cur_group.next = nxt
+                prev_group = cur_group
+            else:
+                break
+        
+        self.head = dummy.next
+
+
+    def reverse_k_recursive(self, head,k): # O(n), O(n/k)
+
+        cur = head
+        prev = None
+        nxt = cur.next
+        count = 0
+
+        while cur and count < k:
+            nxt = cur.next
+            cur.next = prev
+            prev = cur
+            cur = nxt
+            count += 1
+        
+        if cur: head.next = self.reverse_k_recursive(cur,k)
+        if head is self.head: self.head = prev
+
+        return prev
+
+    def sortedRemoveDuplicates(self): 
+        cur = self.head
+        if not cur: return cur
+        while cur:
+            nxt = cur.next
+            while cur and nxt and cur.val == nxt.val:
+                cur.next = nxt.next
+                nxt = nxt.next
+            cur = cur.next
+        
+
+    def seperateEvenOdd(self):
+        cur = self.head
+        prev = None
+        evenLL = SingleLinkedList()
+        while cur:
+            if cur.val%2 == 0:
+                evenLL.push(cur.val)
+                self.remove(cur.val)
+            prev = cur
+            cur = cur.next
+        prev.next = evenLL.head
 
 if __name__ == '__main__':
 
@@ -378,3 +513,85 @@ if __name__ == '__main__':
     linked_list.head.next.next.next.next.next.next = linked_list.head.next
     print(linked_list.isALoop())
     # Expected output: True (Loop exists in the linked list)
+
+    # Test 34: Insert values into the correct place of a sorted array
+    linked_list = SingleLinkedList()
+    linked_list.push(1)
+    linked_list.push(3)
+    linked_list.push(4)
+    linked_list.push(5)
+    linked_list.push(8)
+    linked_list.sortedInsert(2)
+    linked_list.sortedInsert(10)
+    linked_list.sortedInsert(0)
+    print(linked_list)
+    # Expected output: 0 1 2 3 4 5 8 10
+
+    # Test 35 - Reverse in pairs
+    linked_list.reverseInPairs()
+    print(linked_list)
+    # Expected output: 1 0 3 2 5 4 10 8
+
+    # Test 36 - check if linked list is a palindrome
+    print(linked_list.isPalindrome())
+    # Expected output: False
+
+    # Test 37 - check if linked list is a palindrome
+    linked_list = SingleLinkedList()
+    linked_list.push(1)
+    linked_list.push(2)
+    linked_list.push(3)
+    linked_list.push(3)
+    linked_list.push(2)
+    linked_list.push(1)
+    print(linked_list.isPalindrome())
+    # Expected output: True
+
+    # Test 38 - reverse in groups
+    linked_list = SingleLinkedList()
+    linked_list.push(1)
+    linked_list.push(2)
+    linked_list.push(3)
+    linked_list.push(4)
+    linked_list.push(5)
+    linked_list.push(6)
+    linked_list.push(7)
+    linked_list.reverse_k(3)
+    print(linked_list)
+    # Expected output: 3 2 1 6 5 4 7
+
+    # Test 39 - reverse in groups recursive
+    linked_list = SingleLinkedList()
+    linked_list.push(1)
+    linked_list.push(2)
+    linked_list.push(3)
+    linked_list.push(4)
+    linked_list.push(5)
+    linked_list.push(6)
+    linked_list.push(7)
+    linked_list.reverse_k_recursive(linked_list.head, 3)
+    print(linked_list)
+    # Expected output: 3 2 1 6 5 4 7
+
+    # Test 40 - remove duplicates in sorted list
+    linked_list = SingleLinkedList()
+    linked_list.push(1)
+    linked_list.push(2)
+    linked_list.push(2)
+    linked_list.push(3)
+    linked_list.push(4)
+    linked_list.push(4)
+    linked_list.push(5)
+    linked_list.push(6)
+    linked_list.push(6)
+    linked_list.push(6)
+    linked_list.push(7) 
+    linked_list.sortedRemoveDuplicates()
+    print(linked_list)
+    # Expected output: 1 2 3 4 5 6 7
+
+    # Test 41 - seperate even and odd
+    linked_list.seperateEvenOdd()
+    print(linked_list)
+    # Expected outcome: 1 3 5 7 2 4 6
+

@@ -21,6 +21,21 @@ class CircularLinkedList:
                 break
         return out
     
+    def traverse(self):
+        s= []
+        cur = self.head
+        while cur:
+            if cur.val in s:
+                print('culprit', cur.val)
+                print(s)
+                break
+            s.append(cur.val)
+            print(cur.val, end=' ')
+            cur = cur.next
+            if cur is self.head:
+                break
+        print()
+    
     def push(self, val):
         node = Node(val)
         cur = self.head
@@ -223,7 +238,233 @@ class CircularLinkedList:
             if slow is fast:
                 return True
         return False
+    
+    def loopStart(self):
 
+        # works because meeting place to starting point will be 
+        # the same distance as head to starting point
+
+        slow = self.head
+        fast = self.head
+        while fast and fast.next:
+            fast = fast.next.next
+            slow = slow.next
+            if fast is slow:
+                slow = self.head
+                while slow is not fast:
+                    slow = slow.next
+                    fast = fast.next
+                return slow.val
+        return None
+    
+    def loopLength(self):
+
+        slow = self.head
+        fast = self.head
+        while fast:
+            fast = fast.next.next
+            slow = slow.next
+            if slow is fast:
+                count = 0
+                while True:
+                    count += 1
+                    slow = slow.next
+                    if slow is fast:
+                        break
+                return count
+        return None
+    
+    def sortedInsert(self, val):
+        node = Node(val)
+        cur = self.head
+        if not cur:
+            self.push(val)
+            return 
+        
+        if cur.val >= val:
+            self.pushLeft(val)
+            return
+        
+        while cur and cur.next:
+            if cur.next is self.head:
+                break
+            if cur.val < val <= cur.next.val:
+                node.next = cur.next
+                cur.next = node
+                return
+            cur = cur.next
+        self.push(val)
+        return
+    
+    def reverseInPairs(self):
+        cur = self.head
+        if not cur: return
+        nxt = cur.next
+        prev = cur
+        while prev.next is not self.head:
+            prev = prev.next
+        while True:
+            cur.next = nxt.next
+            nxt.next = cur
+            if prev.next is self.head: self.head = nxt
+            prev.next = nxt
+
+            prev = cur
+            cur = cur.next
+            nxt = cur.next
+
+            if cur is self.head or nxt is self.head: return
+    
+    def splitIntoTwo(self):
+        slow = self.head
+        if not slow: return
+        prev = None
+        fast = self.head
+        while True:
+            if fast.next is self.head or fast.next.next is self.head:
+                break
+            prev = slow
+            fast = fast.next.next
+            slow = slow.next
+        
+        if fast.next.next is self.head:
+            prev = slow
+            slow = slow.next
+            fast.next.next = None
+        elif fast.next is self.head:
+            prev = slow
+            slow = slow.next
+            fast.next = None
+        if prev: prev.next = None
+
+        return self.head, slow
+    
+    def traverseFrom(self,node):
+        s = []
+        while node:
+            print(node.val, end=' ')
+            node = node.next
+        print()
+
+    def end_node(self):
+        cur = self.head
+        if not cur: return cur
+        while cur.next is not self.head:
+            cur = cur.next
+        return cur
+
+
+    def isPalindrome(self):
+        cur = self.head
+        if not cur: return False
+        if not cur.next: return True
+        slow = cur
+        fast = cur
+        while fast.next is not self.head and fast.next.next is not self.head:
+            slow = slow.next
+            fast = fast.next.next
+        mid = slow
+        mid = mid.next
+        stack = []
+        while mid is not self.head:
+            stack.append(mid.val)
+            mid = mid.next
+        while stack:
+            out = stack.pop()
+            if out != cur.val:
+                return False
+            cur = cur.next
+        return True
+    
+    def reverse_k(self, k):
+        head = self.head
+        if k <= 1 or not head or head.next == head:
+            return head
+    
+        # Count the total number of nodes in the circular linked list
+        total_nodes = 1
+        current = head
+        while current.next != head:
+            current = current.next
+            total_nodes += 1
+        
+        # Adjust k in case it's greater than the total number of nodes
+        k = min(k, total_nodes)
+        
+        dummy = Node(0)
+        dummy.next = head
+        prev_group_end = dummy
+        
+        while total_nodes >= k:
+            current_group_start = prev_group_end.next
+            current = current_group_start
+            prev = None
+            count = 0
+            
+            while count < k:
+                next_node = current.next
+                current.next = prev
+                prev = current
+                current = next_node
+                count += 1
+            
+            prev_group_end.next.next = current
+            prev_group_end.next = prev
+            
+            prev_group_end = current_group_start
+            total_nodes -= k
+        
+        return dummy.next
+
+    def reverse_k_recursive(self, head, k):
+        if not head: return head
+        cur = head
+        prev = None
+        count = 0
+        while count < k:
+            nxt = cur.next
+            cur.next = prev if cur.next is not self.head else self.head
+            prev = cur
+            cur = nxt
+            if cur is self.head: break
+            count += 1
+        if nxt is not self.head:
+            rev = self.reverse_k_recursive(nxt, k)
+            head.next = rev
+
+        if head is self.head:
+            end_node = self.end_node()
+            if end_node: 
+                end_node.next = prev
+            self.head = prev
+        return prev
+
+    def sortedRemoveDuplicates(self):
+        cur = self.head
+        if not cur: return cur
+        while True:
+            nxt = cur.next
+            while nxt is not self.head and cur.val == nxt.val:
+                cur.next = nxt.next
+                nxt = nxt.next
+            cur = cur.next
+            if cur is self.head: break
+
+    def seperateEvenOdd(self):
+        cur = self.head
+        if not cur: return cur
+        prev = None
+        evenLL = CircularLinkedList()
+        while True:
+            if cur.val % 2 == 0:
+                evenLL.push(cur.val)
+                self.remove(cur.val)
+            prev = cur
+            cur = cur.next
+            if cur is self.head:
+                break
+        prev.next = evenLL.head
+        evenLL.end_node().next = self.head
 
 if __name__ == '__main__':
 
@@ -425,7 +666,108 @@ if __name__ == '__main__':
     print(linked_list.isALoop())
     # Expected output: True 
 
-    # Test 33: Create a loop in the linked list and check again
-    linked_list.head.next.next.next.next.next.next = None
+    # Test 33: Print the starting point of the loop using 'loopStart'
+    print(linked_list.loopStart())
+    # Expected output: 6.5
+
+    # Test 34: Create a loop in the linked list and check again
+    linked_list.head.next.next.next.next.next.next = linked_list.head.next
     print(linked_list.isALoop())
     # Expected output: False 
+
+    # Test 35: Count the length of the loop using 'loopLength'
+    print(linked_list.loopLength())
+    # Expected output: 5
+
+    # Test 36: Insert values into the correct place of a sorted array
+    linked_list.sortedInsert(8.5)
+    linked_list.sortedInsert(7)
+    linked_list.sortedInsert(0)
+    print(linked_list)
+    # Expected output: 0 6.5 7 8.2 8.5 9 4.7 3 2
+
+    # Test 37 - Reverse in pairs
+    linked_list = CircularLinkedList()
+    linked_list.push(1)
+    linked_list.push(2)
+    linked_list.push(3)
+    linked_list.push(4)
+    linked_list.push(5)
+    linked_list.push(6)
+    linked_list.reverseInPairs()
+    print(linked_list)
+    # Expected output: 2 1 4 3 6 5
+
+    # Test 38 - Split into two 
+    one, two = linked_list.splitIntoTwo()
+    linked_list.traverseFrom(one)
+    linked_list.traverseFrom(two)
+    # Expected output: 2 1 4 , 3 6 5
+
+
+    # Test 39 - check if linked list is a palindrome
+    linked_list = CircularLinkedList()
+    linked_list.push(1)
+    linked_list.push(2)
+    linked_list.push(3)
+    linked_list.push(4)
+    print(linked_list.isPalindrome())
+    # Expected output: False
+
+    # Test 40 - check if linked list is a palindrome
+    linked_list = CircularLinkedList()
+    linked_list.push(1)
+    linked_list.push(2)
+    linked_list.push(3)
+    linked_list.push(4)
+    linked_list.push(3)
+    linked_list.push(2)
+    linked_list.push(1)
+    print(linked_list.isPalindrome())
+    # Expected output: True
+
+    # Test 41 - reverse in groups
+    linked_list = CircularLinkedList()
+    linked_list.push(1)
+    linked_list.push(2)
+    linked_list.push(3)
+    linked_list.push(4)
+    linked_list.push(5)
+    linked_list.push(6)
+    #linked_list.reverse_k(3)
+    #print(linked_list)
+    # Expected output: 3 2 1 6 5 4 7 
+
+    # Test 42 - reverse in groups recursive
+    linked_list = CircularLinkedList()
+    linked_list.push(1)
+    linked_list.push(2)
+    linked_list.push(3)
+    linked_list.push(4)
+    linked_list.push(5)
+    linked_list.push(6)
+    #linked_list.reverse_k_recursive(linked_list.head, 3)
+    #print(linked_list)
+    # Expected output: 3 2 1 6 5 4 7
+
+    # Test 43 - remove duplicates in sorted list
+    linked_list = CircularLinkedList()
+    linked_list.push(1)
+    linked_list.push(2)
+    linked_list.push(2)
+    linked_list.push(3)
+    linked_list.push(4)
+    linked_list.push(4)
+    linked_list.push(5)
+    linked_list.push(6)
+    linked_list.push(6)
+    linked_list.push(6)
+    linked_list.push(7) 
+    linked_list.sortedRemoveDuplicates()
+    print(linked_list)
+    # Expected output: 1 2 3 4 5 6 7
+
+    # Test 44 - seperate even and odd
+    linked_list.seperateEvenOdd()
+    print(linked_list)
+    # Expected outcome: 1 3 5 7 2 4 6
