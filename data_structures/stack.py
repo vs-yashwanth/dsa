@@ -149,10 +149,7 @@ class StackRaw:
             print(cur.val, end=' ')
             cur = cur.next
         print()  
-
-# implement from queues
-
-# ...
+        
 
 if __name__ == '__main__':
 

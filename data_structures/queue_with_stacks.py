@@ -1,64 +1,91 @@
-class Stack:
-    def __init__(self):
-        self.s = []
-    def push(self,data):
-        self.s.append(data)
-    def pop(self):
-        return self.s.pop()
-    def peek(self):
-        return self.s[-1]
-    def show(self):
-        print(self.s)
+from stack import StackRaw
 
-class queue1:
-    """ making enqueue costly """
+class Queue1:
+    # making enqueue costly
     def __init__(self):
-        self.s1 = Stack()
-        self.s2 = Stack()
+        self.s1 = StackRaw()
+        self.s2 = StackRaw()
 
-    def enqueue(self,data):
-        while self.s1.s:
+    def enqueue(self, val):
+        while not self.s1.is_empty():
             self.s2.push(self.s1.pop())
-        self.s1.push(data)
-        while self.s2.s:
+        self.s1.push(val)
+        while not self.s2.is_empty():
             self.s1.push(self.s2.pop())
-    
-    def dequeue(self):
-        return self.s1.pop()
-    
-    def show(self):
-        print(self.s1.s)
 
-class queue2:
-    """ making deque costly """
-    def __init__(self):
-        self.s1 = Stack()
-        self.s2 = Stack()
-    
-    def enqueue(self,data):
-        self.s1.push(data)
-    
     def dequeue(self):
-        if not self.s2.s:
-            while self.s1.s:
-                self.s2.push(self.s1.pop())
-            return self.s2.pop()
-        else:
-            return self.s2.pop()
+        if self.s1.is_empty():
+            return 'Empty Queue'
+        return self.s1.pop()
+
+    def peek(self):
+        if self.s1.is_empty():
+            return 'Empty Queue'
+        return self.s1.peek()
+
     def show(self):
-        print(self.s1.s)
+        self.s1.show()
+
+
+class Queue2:
+    # making dequeue costly
+
+    def __init__(self):
+        self.s1 = StackRaw()
+        self.s2 = StackRaw()
+
+    def enqueue(self, val):
+        self.s1.push(val)
+
+    def dequeue(self):
+        if self.s1.is_empty():
+            return 'Empty queue'
+        while not self.s1.is_empty():
+            self.s2.push(self.s1.pop())
+        out = self.s2.pop()
+        while not self.s2.is_empty():
+            self.s1.push(self.s2.pop())
+        return out
+
+    def peek(self):
+        if self.s1.is_empty():
+            return 'Empty queue'
+        while self.s1.size() != 1:
+            self.s2.push(self.s1.pop())
+        out = self.s1.peek()
+        while not self.s2.is_empty():
+            self.s1.push(self.s2.pop())
+        return out
+
+    def show(self):
+        self.s1.show()
+
 
 if __name__ == '__main__':
-    q1 = queue1()
-    q1.enqueue(0)
-    q1.enqueue(1)
-    q1.enqueue(2)
-    q1.show()
-    print(q1.dequeue())
 
-    q2 = queue2()
-    q2.enqueue(2)
-    q2.enqueue(1)
-    q2.enqueue(0)
-    q2.show()
-    print(q2.dequeue())
+    queue_class = Queue2
+
+    # Initialize an empty queue
+    queue = queue_class()
+
+    # Test enqueue method
+    queue.enqueue(1)
+    queue.enqueue(2)
+    queue.enqueue(3)
+
+    # Test show method
+    queue.show()
+
+    # Test peek method
+    print("Peek:", queue.peek())  # Expected: 1
+
+    # Test dequeue method
+    print("Dequeue:", queue.dequeue())  # Expected: 1
+    print("Dequeue:", queue.dequeue())  # Expected: 2
+
+    # Test dequeue from an empty queue
+    empty_queue = queue_class()
+    print("Dequeue from empty queue:", empty_queue.dequeue())  # Expected: None
+
+    # Test peek on an empty queue
+    print("Peek (empty queue):", empty_queue.peek())  # Expected: None
