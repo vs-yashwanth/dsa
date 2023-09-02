@@ -1,1 +1,1 @@
-A collection of DSA code snippets.
+My collection of Data Structures and Algorithms :)
