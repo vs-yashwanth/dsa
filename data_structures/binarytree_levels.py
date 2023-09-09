@@ -7,7 +7,7 @@ class Node:
 def levelorder(root):
     h=height(root)
     for i in range(1,h+1):
-        currentlevel(root,i)
+        print(currentlevel(root,i))
         
 def currentlevel(root,i):
     if root is None:
@@ -37,6 +37,5 @@ root.left.left=Node(7)
 root.right.left=Node(15)
 root.right.right=Node(8)
 
-#levelorder(root)
-print(height(root))
+levelorder(root)
             
