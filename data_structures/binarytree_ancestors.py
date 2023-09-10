@@ -1,26 +1,27 @@
-class Node:
-    def __init__(self,data):
-        self.data = data
-        self.prev = self.next = None
+from binarytree import BinaryTree, TreeNode as Node
 
-def ancestors(root,key):
+
+def ancestors(root, val, out=[]):
     if not root:
-        return root
-    if root.data == key:
+        return False
+    if root.val == val:
         return True
-
-    if ancestors(root.left,key) or ancestors(root.right,key):
-        print(root.data)
+    if ancestors(root.left, val, out) or ancestors(root.right, val, out):
+        out.append(root.val)
         return True
     return False
 
-root = Node(1)
-root.left = Node(2)
-root.right = Node(3)
-root.left.left = Node(4)
-root.left.right = Node(5)
-root.left.left.left = Node(7)
-  
-ancestors(root, 7)
-  
+if __name__ == '__main__':
+
+    tree = BinaryTree()
+    tree.root = Node(1)
+    tree.root.left = Node(2)
+    tree.root.right = Node(3)
+    tree.root.left.left = Node(4)
+    tree.root.left.right = Node(5)
+    tree.root.left.left.left = Node(7)
+    
+    anc = []
+    ancestors(tree.root, 7, anc)
+    print(anc)
 

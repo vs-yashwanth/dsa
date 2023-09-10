@@ -257,6 +257,27 @@ class BinaryTree:
             return 0
         return 1 + self.size_recursive(root.left) + self.size_recursive(root.right)
 
+    def sum(self):
+        root = self.root
+        if not root:
+            return 0
+        total = 0
+        queue = QueueRaw()
+        queue.enqueue(root)
+        while not queue.is_empty():
+            cur = queue.dequeue()
+            total += cur.val
+            if cur.left:
+                queue.enqueue(cur.left)
+            if cur.right:
+                queue.enqueue(cur.right)
+        return total
+
+    def sum_recursive(self, root):
+        if not root:
+            return 0
+        return root.val + self.sum_recursive(root.left) + self.sum_recursive(root.right)
+
 
 if __name__ == '__main__':
 
@@ -328,3 +349,8 @@ if __name__ == '__main__':
     print('Size')
     print(tree.size())   # expected: 9
     print(tree.size_recursive(tree.root))   # expected: 9
+    print()
+
+    print('Sum')
+    print(tree.sum())
+    print(tree.sum_recursive(tree.root))

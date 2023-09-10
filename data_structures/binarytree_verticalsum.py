@@ -1,24 +1,27 @@
+from binarytree import BinaryTree
 from collections import defaultdict
-class Node:
-    def __init__(self,data):
-        self.data=data
-        self.left=self.right=None
 
-def vertical_sum(root,hd,d):
+
+def vertical_sum(root, horizontal_dist, D):
     if not root:
         return 0
-    d[hd] += root.data
-    vertical_sum(root.left,hd-1,d)
-    vertical_sum(root.right,hd+1,d)
+    if horizontal_dist in D:
+        D[horizontal_dist] += root.val
+    else:
+        D[horizontal_dist] = root.val
+    vertical_sum(root.left, horizontal_dist-1, D)
+    vertical_sum(root.right, horizontal_dist+1, D)
 
 
-root = Node(1) 
-root.left = Node(2) 
-root.right = Node(3) 
-root.left.left = Node(4) 
-root.left.right = Node(5) 
-root.right.left = Node(6) 
-root.right.right = Node(7)
-d=defaultdict(int)
-vertical_sum(root,0,d)
-print(d.values())
+if __name__ == '__main__':
+    tree = BinaryTree()
+    tree.insert(1)
+    tree.insert(2)
+    tree.insert(3)
+    tree.insert(4)
+    tree.insert(5)
+    tree.insert(6)
+    tree.insert(7)
+    d = {}
+    vertical_sum(tree.root, 0, d)
+    print([d[key] for key in sorted(d.keys())])

@@ -1,38 +1,40 @@
-from binarytree import Node, build
-                         
+from binarytree import BinaryTree, TreeNode as Node
 
 
-def mirror(root):
-
+def mirror_tree(root):
     if not root:
         return
-    mirror(root.left)
-    mirror(root.right)
-    root.left,root.right = root.right,root.left
+    mirror_tree(root.left)
+    mirror_tree(root.right)
+    root.left, root.right = root.right, root.left
 
-def is_mirror(r1,r2):
-    if not r1 and not r2:
+
+def are_mirror_trees(root1, root2):
+    if not root1 and not root2:
         return True
-    if not r1 or not r2:
+    elif not root1 or not root2:
         return False
-    return r1.value==r2.value and is_mirror(r1.left,r2.right) and is_mirror(r1.right,r2.left)
-
-root = Node(1)
-root.left = Node(2)
-root.right = Node(3)
-root.left.left = Node(2)
-
-root1 = Node(1)
-root1.left = Node(2)
-root1.right = Node(3)
-root1.left.left = Node(2)
-
-print(root)
-print(root1)
-mirror(root)
-print(root)
-print(root1)
-print(is_mirror(root,root1))
+    return root1.val == root2.val \
+        and are_mirror_trees(root1.left, root2.right) \
+        and are_mirror_trees(root1.right, root2.left)
 
 
+if __name__ == '__main__':
 
+    tree = BinaryTree()
+    tree.root = Node(1)
+    tree.root.left = Node(2)
+    tree.root.right = Node(3)
+    tree.root.left.left = Node(4)
+
+    tree1 = BinaryTree()
+    tree1.root = Node(1)
+    tree1.root.left = Node(2)
+    tree1.root.right = Node(3)
+    tree1.root.left.left = Node(4)
+
+    mirror_tree(tree.root)
+    print(tree.inorder(tree.root))  # 3 1 2 4
+    print(tree1.inorder(tree1.root))  # 4 2 1 3
+
+    print(are_mirror_trees(tree1.root, tree.root))  # True
