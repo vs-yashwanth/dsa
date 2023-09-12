@@ -1,112 +1,175 @@
-from binarytree import build
+from binarytree import BinaryTree
+from queue_py import QueueRaw
 
 class Node:
-    def __init__(self,data):
-        self.data=data
-        self.left=None
-        self.right=None
+    def __init__(self, val):
+        self.val = val
+        self.left = None
+        self.right = None
 
-def search(root,key):
-    if root is None or root.data == key:
+# time complexity: O(log n) if tree is balanced else O(n)
+
+
+class BinarySearchTree(BinaryTree):
+    def __init__(self):
+        self.root = None
+
+    def insert(self, root, val):
+        if not root:
+            node = Node(val)
+            if not self.root:
+                self.root = node
+            return node
+
+        if root.val == val:
+            return
+        elif val < root.val:
+            root.left = self.insert(root.left, val)
+        else:
+            root.right = self.insert(root.right, val)
         return root
-    if root.data<key:
-        return search(root.right,key)
-    else:
-        return search(root.left,key)
 
-def insert(root,key):
-    if root is None:
-        return Node(key)
-    if root.data==key:
+    def insert_iter(self, val):
+        node = Node(val)
+        if not self.root:
+            self.root = node
+            return
+        cur = self.root
+        while cur:
+            if val == cur.val:
+                return
+            if val < cur.val:
+                if cur.left:
+                    cur = cur.left
+                else:
+                    break
+            elif val > cur.val:
+                if cur.right:
+                    cur = cur.right
+                else:
+                    break
+
+        if val < cur.val:
+            cur.left = node
+        else:
+            cur.right = node
+        return
+
+    def search(self, root, target):
+        if not root:
+            return False
+        if root.val == target:
+            return True
+        if target < root.val:
+            return self.search(root.left, target)
+        else:
+            return self.search(root.right, target)
+
+    def delete(self, root, target):
+        if not root:
+            return root
+        if root.val == target:
+            if not root.left:
+                return root.right
+            elif not root.right:
+                return root.left
+            else:
+                inorder_predecessor = self.max_node(root.left)
+                root.val = inorder_predecessor
+                root.left = self.delete(root.left, inorder_predecessor)
+        elif target < root.val:
+            root.left = self.delete(root.left, target)
+        else:
+            root.right = self.delete(root.right, target)
+
         return root
-    if root.data<key:
-        root.right = insert(root.right,key)
-    else:
-        root.left = insert(root.left,key)
-    return root
 
-def min_node(root):
-    current=root
-    while current.left:
-        current=current.left
-    return current
+    def minimum(self):
+        cur = self.root
+        if not cur:
+            return 0
+        while cur.left:
+            cur = cur.left
+        return cur.val
 
-def delete(root,key):
-    if root is None:
-        return root
-    if root.data<key:
-        root.right=delete(root.right,key)
-    elif root.data>key:
-        root.left=delete(root.left,key)
-    else:
-        if root.left is None:
-            temp=root.right
-            root=None
-            return temp
-        elif root.right is None:
-            temp=root.left
-            root=None
-            return temp
-        
-        temp=min_node(root.right)
-        root.data=temp.data
-        root.right=delete(root.right,temp.data)
-    return root
+    def maximum(self):
+        cur = self.root
+        while cur.right:
+            cur = cur.right
+        return cur.val
 
+    def min_node(self, root):
 
-def inorder(root):
-    if root:
-        inorder(root.left)
-        print(root.data,end=' ')
-        inorder(root.right)
-        
+        while root.left:
+            root = root.left
+        return root.val
 
-def levelorder(root):
-    l=[]
-    if root:
-        q=[root]
-        while q:
-            temp=q.pop(0)
-            l.append(temp.data)
-            if temp.left:
-                q.append(temp.left)
-            if temp.right:
-                q.append(temp.right)
-    return l
+    def max_node(self, root):
+
+        while root.right:
+            root = root.right
+        return root.val
+
 
 if __name__ == '__main__':
-    
 
-    root = None
-    root = insert(root, 50)
-    root = insert(root, 30)
-    root = insert(root, 20)
-    root = insert(root, 40)
-    root = insert(root, 70)
-    root = insert(root, 60)
-    root = insert(root, 80)
-    
+    bst = BinarySearchTree()
 
-    inorder(root)
-    print(build(levelorder(root)))
+    # Test case 1: Insert single node
+    bst.insert(bst.root, 50)
+    # Expected output: 50
+    print("Inorder traversal (single node):")
+    print(bst.inorder(bst.root))
 
-    root = delete(root, 20)
+    # Test case 2: Insert duplicate node
+    bst.insert(bst.root, 50)
+    # Expected output: 50 50
+    print("Inorder traversal (duplicate nodes):")
+    print(bst.inorder(bst.root))
 
-    inorder(root)
-    print()
+    # Test case 3: Insert nodes in a zigzag pattern
+    bst = BinarySearchTree()
+    bst.insert(bst.root, 50)
+    bst.insert(bst.root, 30)
+    bst.insert(bst.root, 70)
+    bst.insert(bst.root, 20)
+    bst.insert(bst.root, 40)
+    bst.insert(bst.root, 60)
+    bst.insert(bst.root, 80)
+    # Expected output: 20 30 40 50 60 70 80
+    print("Inorder traversal (zigzag pattern):")
+    print(bst.inorder(bst.root))
 
-    root = delete(root, 30)
+    print('Deletion')
+    # Test case 4: Delete a leaf node
+    bst.delete(bst.root, 20)
+    # Expected output: 30 40 50 60 70 80
+    print(bst.inorder(bst.root))
 
-    inorder(root)
+    # Test case 5: Delete a node with one child
+    bst.delete(bst.root, 30)
+    # Expected output: 40 50 60 70 80
+    print(bst.inorder(bst.root))
 
-    print()
-    root = delete(root, 50)
+    # Test case 6: Delete a node with two children
+    bst.delete(bst.root, 50)
+    # Expected output: 40 60 70 80
+    print(bst.inorder(bst.root))
 
-    inorder(root)
-    print()
+    # Test case 7: Find minimum and maximum values in an empty tree
+    min_val = bst.minimum()
+    max_val = bst.maximum()
+    # Expected output: Minimum: 40, Maximum: 80
+    print(f"Minimum {min_val}, Maximum {max_val}")
 
+    # Test case 8: Search for a node that doesn't exist
+    search_result_nonexistent = bst.search(bst.root, 10)
+    # Expected output: Key not found
+    print(search_result_nonexistent)
 
+    # Test case 9: Search for a node that exists
+    search_result_existing = bst.search(bst.root, 60)
+    # Expected output: 60
+    print(search_result_existing)
 
-
-
-
+    print(bst.levels())

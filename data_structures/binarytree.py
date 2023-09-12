@@ -131,6 +131,25 @@ class BinaryTree:
                 queue.enqueue(temp.right)
         return out
 
+    def levels(self):
+        root = self.root
+        out = [[root.val]]
+        queue = QueueRaw()
+        queue.enqueue(root)
+        level = []
+        while not queue.is_empty():
+            temp = queue.dequeue()
+            if temp.left:
+                level.append(temp.left)
+            if temp.right:
+                level.append(temp.right)
+            if queue.is_empty() and level:
+                out.append([i.val for i in level])
+                for i in level:
+                    queue.enqueue(i)
+                level = []
+        return out
+
     def height_recursive(self, root):
         if not root:
             return -1
