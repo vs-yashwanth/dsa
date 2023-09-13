@@ -1,1 +1,5 @@
-print('hello world')
+def p(w):
+    print(w)
+
+
+p('hw')
