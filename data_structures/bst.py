@@ -1,6 +1,7 @@
 from binarytree import BinaryTree
 from queue_py import QueueRaw
 
+
 class Node:
     def __init__(self, val):
         self.val = val
@@ -110,6 +111,11 @@ class BinarySearchTree(BinaryTree):
             root = root.right
         return root.val
 
+    def size(self, root):
+        if not root:
+            return 0
+        return self.size(root.left) + 1 + self.size(root.right)
+
 
 if __name__ == '__main__':
 
@@ -171,5 +177,9 @@ if __name__ == '__main__':
     search_result_existing = bst.search(bst.root, 60)
     # Expected output: 60
     print(search_result_existing)
+
+    # Test case 10: Size of tree
+    print(bst.size(bst.root))
+    # expected: 4
 
     print(bst.levels())

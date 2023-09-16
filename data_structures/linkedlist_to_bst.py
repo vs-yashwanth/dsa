@@ -1,61 +1,79 @@
-#notworking
-class Node:
-    def __init__(self,data):
-        self.data=data
-        self.next = self.prev = None
-    
-def middle(head):
+from bst import BinarySearchTree, Node
+from linkedlist_single import SingleLinkedList
 
-    temp=temp2=head
-    while temp2 and temp2.next:
-        temp2=temp2.next.next
-        temp=temp.next
-    return temp
 
-def convert(head):
-    if head is None or head.next is None:
-        return head
-    else:
-        mid = middle(head)
-        temp = head
-        while temp.next != mid:
-            temp=temp.next
-        temp.next = None
-        q = mid.next
-        mid.next = None
-        mid.prev = convert(head)
-        mid.next = convert(q)
-        return mid
-
-def push(head,data):
-    new=Node(data)
+def linkedlist_to_bst_1(head):  # O(nlogn)
     if not head:
-        return new
-    new.next=head
-    head.prev=new
-    return new
-
-def show(head):
-    temp=head
-    while temp:
-        print(temp.data,end=' ')
-        temp=temp.next
-    print()
-
-def pre(root):
-    if root:
-        print(root.data,end=' ')
-        pre(root.prev)
-        pre(root.next)
-
-head=push(None,5)
-head=push(head,4)
-head=push(head,3)
-head=push(head,2)
-head=push(head,1)
-
-show(head)
-root=convert(head)
-pre(root)
+        return head
+    if not head.next:
+        return Node(head.val)
+    slow = fast = head
+    prev = None
+    while fast.next:
+        prev = slow
+        slow = slow.next
+        fast = fast.next.next
+    mid = slow
+    prev.next = None
+    root = Node(mid.val)
+    root.left = linkedlist_to_bst_1(head)
+    root.right = linkedlist_to_bst_1(mid.next)
+    return root
 
 
+head = None
+
+
+def linkedlist_to_bst_2(n):  # O(n), O(n)
+    global head
+    if n <= 0:
+        return None
+    left = linkedlist_to_bst_2(n//2)
+    root = Node(head.val)
+    root.left = left
+    head = head.next
+    root.right = linkedlist_to_bst_2(n-n//2-1)
+    return root
+
+
+def linkedlist_to_bst_3(head, n):  # O(n), O(n)
+    if n <= 0:
+        return None, head
+    left, head = linkedlist_to_bst_3(head, n//2)
+    root = Node(head.val)
+    root.left = left
+    head = head.next
+    root.right, head = linkedlist_to_bst_3(head, n-n//2-1)
+    return root, head
+
+
+if __name__ == "__main__":
+
+    fn = linkedlist_to_bst_2
+
+    bst = BinarySearchTree()
+    ll = SingleLinkedList()
+    ll.push(20)
+    ll.push(30)
+    ll.push(40)
+    ll.push(50)
+    ll.push(60)
+    ll.push(70)
+    ll.push(80)
+    head = ll.head
+    root = fn(ll.length())
+    print(bst.inorder(root))  # expected: [20, 30, 40, 50, 60, 70, 80]
+
+    fn = linkedlist_to_bst_3
+    bst = BinarySearchTree()
+    ll = SingleLinkedList()
+    ll.push(20)
+    ll.push(30)
+    ll.push(40)
+    ll.push(50)
+    ll.push(60)
+    ll.push(70)
+    ll.push(80)
+
+    root, _ = fn(ll.head, ll.length())
+    print(bst.inorder(root))  # expected: [20, 30, 40, 50, 60, 70, 80]
