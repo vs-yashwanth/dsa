@@ -93,7 +93,7 @@ class BinaryMaxHeap:
         for i in range(self.size//2):
             self.heapify(i)
 
-    def kth_largest(self, k):  # O(klogn ); O(klogk), O(n) possible
+    def kth_largest(self, k):  # O(klogn )
         removed = []
         out = None
         if k > self.size:
@@ -104,6 +104,18 @@ class BinaryMaxHeap:
         removed.append(out)
         for i in removed:
             self.insert(i)
+        return out
+    
+    def kth_largest_2(self,k):  # O(n)
+        prev_size = self.size
+        removed = []
+        self.size = min(self.size, 2**k-1)
+        for _ in range(k-1):
+            removed.append(self.pop_max())
+        out = self.get_max()
+        for i in removed:
+            self.insert(i)
+        self.size = prev_size
         return out
 
     def show(self):
@@ -205,7 +217,7 @@ class BinaryMinHeap:
         for i in array:
             self.insert(i)
 
-    def kth_smallest(self, k):  # O(klogn)  ; # O(klogk), O(n) possible
+    def kth_smallest(self, k):  # O(klogn)
         removed = []
         out = None
         if k > self.size:
@@ -216,6 +228,18 @@ class BinaryMinHeap:
         removed.append(out)
         for i in removed:
             self.insert(i)
+        return out
+
+    def kth_smallest_2(self, k):  # O(n)
+        prev_size = self.size
+        removed = []
+        self.size = min(self.size, 2**k-1)
+        for _ in range(k-1):
+            removed.append(self.pop_min())
+        out = self.get_min()
+        for i in removed:
+            self.insert(i)
+        self.size = prev_size
         return out
 
     def show(self):
@@ -281,7 +305,10 @@ if __name__ == "__main__":
     print(random_heap.get_min())  # expected: 2
 
     print(random_heap.kth_largest(3))  # expected: 6
-    print(random_heap.kth_largest(4))  # expected: 6
+    print(random_heap.kth_largest(4))  # expected: 4
+
+    print(random_heap.kth_largest_2(3))  # expected: 6
+    print(random_heap.kth_largest_2(4))  # expected: 4
 
     # tests for min heap ---------------------------------
     print('\nmin heap\n')
@@ -361,3 +388,6 @@ if __name__ == "__main__":
 
     print(random_heap.kth_smallest(3))  # expected: 4
     print(random_heap.kth_smallest(4))  # expected: 6
+
+    print(random_heap.kth_smallest_2(3))  # expected: 4
+    print(random_heap.kth_smallest_2(4))  # expected: 6
