@@ -1,46 +1,63 @@
 import random
-def left(i):
-	return 2*i
-def right(i):
-	return 2*i+1
-def parent(i):
-	return i//2
-def maxheapify(A,i):
-	l=left(i)
-	r=right(i)
-	if l<len(A) and A[l]>A[i]:
-		largest=l
-	else:
-		largest=i
-	if r<len(A) and A[r]>A[largest]:
-		largest=r
-	if largest!=i:
-		A[i],A[largest] = A[largest],A[i]
-		A=maxheapify(A,largest)
-	return A
 
-def buildheap(A):
-	for i in range(len(A)//2,-1,-1):
-		A=maxheapify(A,i)
-	return A
+class MaxHeap:
+    def __init__(self):
+        self.heap = []
+        self.size = 0
 
-def heapsort(A):
-    A=buildheap(A)
-    #print('heap',A)
-    heapsize=len(A)
-    for i in range(len(A)-1,0,-1):
-        A[0],A[i] = A[i], A[0]
-        heapsize-=1
-        r=A[heapsize:]
-        #print('r',r)
-        b=maxheapify(A[:heapsize],0)
-        A=b+r
-    return A
-def main():
-    A=random.sample(range(100),50)
-    print(A)
-    A=(heapsort(A))
-    print(A)
-    print(A==sorted(A))
+    def build_heap(self, array):
+        self.size = len(array)
+        self.heap = array
+        for i in range(self.size//2,-1,-1):
+            self.heapify_down(i)
 
-main()
+    def parent(self, i):
+        return i//2
+    
+    def left_child(self, i):
+        return 2*i + 1
+    
+    def right_child(self, i):
+        return 2*i + 2
+    
+    def heapify_down(self, ind):
+        if ind >= self.size:
+            return
+        left = self.left_child(ind)
+        right = self.right_child(ind)
+        largest = ind
+        if left < self.size and self.heap[left] > self.heap[ind]:
+            largest = left
+        else: 
+            largest = ind
+        if right < self.size and self.heap[right] > self.heap[largest]:
+            largest = right
+        if largest != ind:
+            self.heap[largest], self.heap[ind] = self.heap[ind], self.heap[largest]
+            self.heapify_down(largest)
+
+    def pop_max(self):
+        self.heap[0], self.heap[-1] = self.heap[-1], self.heap[0]
+        self.size -= 1
+        out = self.heap.pop()
+        self.heapify_down(0)
+        return out
+    
+def heap_sort(array):
+    heap = MaxHeap()
+    heap.build_heap(array)
+    out = []
+    for _ in range(len(array)):
+        out.append(heap.pop_max())
+    return out[::-1]
+
+
+if __name__ == '__main__':
+    n = 6
+    a = list(random.sample(range(1, 10), n))
+
+    print(a)
+    a_s = a.copy()
+    a_s = heap_sort(a_s)
+    print(a_s)
+    print(a_s == sorted(a))

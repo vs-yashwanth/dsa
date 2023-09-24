@@ -90,7 +90,7 @@ class BinaryMaxHeap:
         # https://stackoverflow.com/questions/9755721/how-can-building-a-heap-be-on-time-complexity
         self.heap = array
         self.size = len(array)
-        for i in range(self.size//2):
+        for i in range(self.size//2,-1,-1):
             self.heapify(i)
 
     def kth_largest(self, k):  # O(klogn )

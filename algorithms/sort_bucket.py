@@ -1,28 +1,30 @@
 import random
-def main():
-    a=[]
-    for _ in range(10):
-        a.append(random.random())
-    print(a)
-    bucketsort(a)
-    print(a)
-    print(a==sorted(a))
-    
-def bucketsort(a):
+from sort_insertion import insertion_sort
 
-    b=[]
-    for i in range(10):
-        b.append([])
-    for i in a:
-        index=int(i*10)
 
-        b[index].append(i)
+def bucket_sort(array):
+
+    buckets = [[] for _ in range(10)]
+
+    for val in array:
+        ind = int(val*10)
+        buckets[ind].append(val)
 
     for i in range(10):
-        b[i].sort()
-    a.clear()
-    for i in b:
-        for j in i:
-            a.append(j)
-            
-main()
+        buckets[i] = insertion_sort(buckets[i])
+
+    out = []
+    for bucket in buckets:
+        out.extend(bucket)
+
+    return out
+
+
+if __name__ == '__main__':
+    n = 6
+    a = [random.random() for _ in range(n)]
+    print(a)
+    a_s = a.copy()
+    a_s = bucket_sort(a_s)
+    print(a_s)
+    print(a_s == sorted(a))

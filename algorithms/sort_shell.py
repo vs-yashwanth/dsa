@@ -1,31 +1,27 @@
 import random
-def main():
-    # print(random.sample.__doc__)
-    a = list(random.sample(range(1, 10), 6))
+# generalized insertion sort - goes back gap steps instead of 1
 
-    print(a)
 
-    shellsort(a)
-    print(a)
-    print(a == sorted(a))
-
-def shellsort(a):
+def shell_sort(a):
     n = len(a)
-    gap = n // 2
+    gap = n//2
     while gap > 0:
-        i = 0
-        j = gap
-        while j < n:
-            if a[i] > a[j]:
-                a[i], a[j] = a[j], a[i]
-            i += 1
-            j += 1
-            k = i
-            while k - gap > -1:
-                if a[k-gap] > a[k]:
-                    a[k], a[k-gap] = a[k-gap], a[k]
-                k -= 1
-        gap //=2
+        for i in range(gap, n):
+            key = a[i]
+            j = i
+            while j >= gap and a[j-gap] > key:
+                a[j] = a[j-gap]
+                j -= gap
+            a[j] = key
+        gap //= 2
+    return a
 
 
-main()
+if __name__ == '__main__':
+
+    a = list(random.sample(range(1, 9), 8))
+    a = [4, 6, 7, 3, 2, 5, 8, 1]
+    print(a)
+    s_a = shell_sort(a.copy())
+    print(s_a)
+    print(s_a == sorted(a))
