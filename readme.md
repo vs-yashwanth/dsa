@@ -1,1 +1,1 @@
-My collection of Data Structures and Algorithms :)
+My personal collection of Data Structures and Algorithms :)
