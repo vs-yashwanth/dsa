@@ -1,41 +1,38 @@
+# where some events might occur before others
+# cyclic graphs cannot be topologically sorted
+
 from collections import defaultdict
+from graph import Graph
 
-class Graph:
-    def __init__(self):
-        self.g = defaultdict(list)
-        self.nodes = set()
-    
-    def addEdge(self,u,v):
-        self.g[u].append(v)
-        self.nodes.add(u)
-        self.nodes.add(v)
-    
-    def topsort(self):
-        
-        visited = set()
-        stack = []
-        for i in self.nodes:
-            if i not in visited:
-                self.dfs(i,visited,stack)
-                
-        print(stack[::-1])
-    
-    def dfs(self,s,visited,stack):
-        visited.add(s)
-        for j in self.g[s]:
-            if j not in visited:
-                self.dfs(j,visited,stack)
-        stack.append(s)
 
-g = Graph()
-g.addEdge(5, 2)
-g.addEdge(5, 0)
-g.addEdge(4, 0)
-g.addEdge(4, 1)
-g.addEdge(2, 3)
-g.addEdge(3, 1)
- 
-print ("Following is a Topological Sort of the given graph")
- 
-# Function Call
-g.topsort()
+def topological_sort(g):
+    graph = g.G
+    visited = set()
+    out = []
+    for u in list(graph.keys()):
+        if u not in visited:
+            dfs(u, graph, visited, out)
+    return out[::-1]
+
+
+def dfs(u, graph, visited, out):
+    visited.add(u)
+    for v in graph[u]:
+        if v not in visited:
+            dfs(v, graph, visited, out)
+    out.append(u)
+
+
+if __name__ == '__main__':
+
+    G = Graph()
+    G.add_edge(0, 1)
+    G.add_edge(1, 2)
+    G.add_edge(1, 6)
+    G.add_edge(1, 7)
+    G.add_edge(6, 8)
+    G.add_edge(2, 3)
+    G.add_edge(2, 4)
+    G.add_edge(2, 5)
+    print(topological_sort(G))
+    G.visualize()

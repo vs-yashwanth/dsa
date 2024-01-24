@@ -25,12 +25,12 @@ if __name__ == "__main__":
 
     g = Graph()
 
-    g.addEdge(1, 0)
-    g.addEdge(1, 5)
-    g.addEdge(2, 3)
-    g.addEdge(3, 4)
-    g.addEdge(5, 6)
-    g.addEdge(5, 1)
+    g.add_edge(1, 0)
+    g.add_edge(1, 5)
+    g.add_edge(2, 3)
+    g.add_edge(3, 4)
+    g.add_edge(5, 6)
+    g.add_edge(5, 1)
 
     print(connected_components(g))
     g.visualize()

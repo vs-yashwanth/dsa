@@ -1,13 +1,14 @@
 from collections import defaultdict
-# import networkx as nx
-# import matplotlib.pyplot as plt
+import networkx as nx
+import matplotlib.pyplot as plt
 from queue_py import QueueRaw
+
 
 class Graph:
     def __init__(self):
         self.G = defaultdict(list)
 
-    def addEdge(self, u, v):
+    def add_edge(self, u, v):
         self.G[u].append(v)
 
     def dfs(self, start=None):
@@ -41,24 +42,32 @@ class Graph:
                     queue.enqueue(neighbour)
         return out
 
-    # def visualize(self):
-    #     nx_graph = nx.Graph(self.G)
-    #     nx.draw(nx_graph, with_labels=True, font_color='white')
-    #     plt.show()
+    def visualize(self):
+        nx_graph = nx.Graph(self.G)
+        nx.draw_networkx(nx_graph, **{
+            'arrows': True,
+            'font_color': 'white',
+            'node_color': 'gray',
+            'node_size': 400,
+            'width': 1,
+            'arrowstyle': '-|>',
+            'arrowsize': 20,
+        })
+        plt.show()
 
 
 if __name__ == '__main__':
 
     G = Graph()
-    G.addEdge(0, 1)
-    G.addEdge(1, 2)
-    G.addEdge(1, 6)
-    G.addEdge(1, 7)
-    G.addEdge(6, 8)
-    G.addEdge(2, 3)
-    G.addEdge(2, 4)
-    G.addEdge(2, 5)
+    G.add_edge(0, 1)
+    G.add_edge(1, 2)
+    G.add_edge(1, 6)
+    G.add_edge(1, 7)
+    G.add_edge(6, 8)
+    G.add_edge(2, 3)
+    G.add_edge(2, 4)
+    G.add_edge(2, 5)
 
     print(G.dfs(5))
     print(G.bfs(0))
-    # G.visualize()
+    G.visualize()

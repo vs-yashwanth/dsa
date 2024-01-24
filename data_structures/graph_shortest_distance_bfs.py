@@ -54,12 +54,12 @@ def bfs(graph, n1, n2, prev):
 if __name__ == '__main__':
 
     graph = Graph()
-    graph.addEdge(0, 1)
-    graph.addEdge(1, 2)
-    graph.addEdge(2, 3)
-    graph.addEdge(3, 4)
-    graph.addEdge(1, 4)
-    graph.addEdge(4, 5)
+    graph.add_edge(0, 1)
+    graph.add_edge(1, 2)
+    graph.add_edge(2, 3)
+    graph.add_edge(3, 4)
+    graph.add_edge(1, 4)
+    graph.add_edge(4, 5)
 
     print('dist: ', shortest_distance(graph, 0, 5))
     print(shortest_path(graph, 0, 5))
