@@ -5,21 +5,26 @@ from collections import defaultdict
 from graph import Graph
 
 
-def topological_sort(g):
+def topological_sort(g, weighted=False):
     graph = g.G
     visited = set()
     out = []
     for u in list(graph.keys()):
         if u not in visited:
-            dfs(u, graph, visited, out)
+            dfs(u, graph, visited, out, weighted)
     return out[::-1]
 
 
-def dfs(u, graph, visited, out):
+def dfs(u, graph, visited, out, weighted):
     visited.add(u)
-    for v in graph[u]:
-        if v not in visited:
-            dfs(v, graph, visited, out)
+    if weighted:
+        for v, w in graph[u]:
+            if v not in visited:
+                dfs(v, graph, visited, out, weighted)
+    else:
+        for v in graph[u]:
+            if v not in visited:
+                dfs(v, graph, visited, out, weighted)
     out.append(u)
 
 
