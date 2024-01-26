@@ -7,6 +7,8 @@ from graph import Graph
 # this means that the next node cannot reach the prev nodes and is a
 # seperate component
 
+# for undirected graphs
+
 # O(V+E)
 
 
