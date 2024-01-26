@@ -9,6 +9,7 @@ class Graph:
         self.G = defaultdict(list)
         self.directed = directed
         self.weighted = weighted
+        self.nodes = set()
 
     def add_edge(self, u, v, w=0):
         if self.directed:
@@ -18,6 +19,8 @@ class Graph:
 
     def add_directed_edge(self, u, v, w):
         self.G[u].append((v, w) if self.weighted else v)
+        self.nodes.add(u)
+        self.nodes.add(v)
 
     def add_undirected_edge(self, u, v, w):
         self.add_directed_edge(u, v, w)

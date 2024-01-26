@@ -2,6 +2,17 @@
 from graph import Graph
 from helpers import QueueWithArray
 
+# For unweighted graphs or graphs with equal weights
+# use Dijkstra for weighted graphs
+
+# because bfs tries to reach end node with least number of edges possible
+# while this works in unweighted graphs, in weighted graphs going through
+# multiple edges that have smaller weights is better than a single edge with
+# a massive weight.
+#
+
+# O(V+E)
+
 
 def shortest_distance(graph, n1, n2):
     visited = set()
@@ -65,3 +76,8 @@ if __name__ == '__main__':
     print(shortest_path(graph, 0, 5))
 
     # graph.visualize()
+
+
+# -------- useful links --------------
+
+# https://www.baeldung.com/cs/graph-algorithms-bfs-dijkstra
