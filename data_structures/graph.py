@@ -58,7 +58,7 @@ class Graph:
         return out
 
     def visualize(self):
-        nx_graph = nx.Graph(self.G)
+        nx_graph = nx.DiGraph(self.G)
         nx.draw_networkx(nx_graph, **{
             'arrows': True,
             'font_color': 'white',
