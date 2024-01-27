@@ -1,56 +1,77 @@
-class Graph:
-    def __init__(self):
-        self.G = []
-        self.nodes = set()
-        
-    def addEdge(self,u,v,w):
-        self.G.append((u,v,w))
-        self.nodes.add(u)
-        self.nodes.add(v)
+from graph import Graph
+from union_find import DisjointSet
+from functools import reduce
+import heapq
 
-    def find(self,parent,key):
-        if parent[key] != key:
-            parent[key] = self.find(parent,parent[key])
-        return parent[key]
-    
-    def union(self,parent,rank,r1,r2):
-        s1 = self.find(parent,r1)
-        s2 = self.find(parent, r2)
 
-        if s1 == s2:
-            return
-        if r1 < r2:
-            parent[r1] = r2
-        elif r2 < r1:
-            parent[r2] = r1
-        else:
-            parent[r2] = r1
-            rank[r1] += 1
-    
-    def kruskal(self):
-        n = len(self.nodes)
-        mst = []
-        i, edges = 0, 0
-        self.G = sorted(self.G, key = lambda x : x[2])
-        parent = [i for i in range(n)]
-        rank = [1]*n
-        while edges < n-1:
-            u, v, w = self.G[i]
-            r1 = self.find(parent, u)
-            r2 = self.find(parent, v)
-            if r1 != r2:
-                edges += 1
-                mst.append((u,v,w))
-                self.union(parent, rank, u,v)
-            i += 1
-        
-        return mst
+def kruskals(G):
+    graph = G.G
+    num_nodes = len(G.nodes)
+    pq = []
+    for u in list(graph.keys()):
+        for v, w in graph[u]:
+            heapq.heappush(pq, (w, u, v))
+    mst = []
+    disjoint_set = DisjointSet(num_nodes)
 
-g = Graph()
-g.addEdge(0, 1, 10)
-g.addEdge(0, 2, 6)
-g.addEdge(0, 3, 5)
-g.addEdge(1, 3, 15)
-g.addEdge(2, 3, 4)
- 
-print(g.kruskal())
+    while len(mst)+1 != num_nodes:
+        w, u, v = heapq.heappop(pq)
+        u_root, v_root = disjoint_set.find(u), disjoint_set.find(v)
+        if u_root != v_root:
+            mst.append((u, v, w))
+            disjoint_set.union(u, v)
+
+    return reduce(lambda a, b: a+b, [c for _, _, c in mst], 0), [(a, b) for a, b, c in mst]
+
+
+if __name__ == "__main__":
+
+    graph = Graph(directed=False, weighted=True)
+    graph.add_edge(0, 1, 4)
+    graph.add_edge(0, 7, 8)
+    graph.add_edge(1, 2, 8)
+    graph.add_edge(1, 7, 11)
+    graph.add_edge(2, 3, 7)
+    graph.add_edge(2, 8, 2)
+    graph.add_edge(2, 5, 4)
+    graph.add_edge(3, 4, 9)
+    graph.add_edge(3, 5, 14)
+    graph.add_edge(4, 5, 10)
+    graph.add_edge(5, 6, 2)
+    graph.add_edge(6, 7, 1)
+    graph.add_edge(6, 8, 6)
+    graph.add_edge(7, 8, 7)
+    print(kruskals(graph))  # 37
+
+    graph_1 = Graph(directed=False, weighted=True)
+    graph_1.add_edge(0, 1, 4)
+    graph_1.add_edge(0, 2, 2)
+    graph_1.add_edge(1, 2, 5)
+    graph_1.add_edge(1, 3, 10)
+    graph_1.add_edge(2, 3, 1)
+
+    print(kruskals(graph_1))  # 7
+
+    graph_2 = Graph(directed=False, weighted=True)
+    graph_2.add_edge(0, 1, 2)
+    graph_2.add_edge(0, 2, 3)
+    graph_2.add_edge(1, 3, 5)
+    graph_2.add_edge(2, 3, 7)
+
+    print(kruskals(graph_2))  # 10
+
+    graph_3 = Graph(directed=False, weighted=True)
+    graph_3.add_edge(0, 1, 1)
+    graph_3.add_edge(0, 2, 3)
+    graph_3.add_edge(1, 2, 4)
+    graph_3.add_edge(1, 3, 2)
+    graph_3.add_edge(2, 3, 5)
+    print(kruskals(graph_3))  # 6
+
+    graph_4 = Graph(directed=False, weighted=True)
+    graph_4.add_edge(0, 1, 2)
+    graph_4.add_edge(0, 2, 5)
+    graph_4.add_edge(1, 3, 4)
+    graph_4.add_edge(2, 3, 1)
+
+    print(kruskals(graph_4))  # 7
