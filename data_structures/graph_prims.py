@@ -2,27 +2,33 @@ from graph import Graph
 import heapq
 from functools import reduce
 
+# tree that touches all nodes with minimum combined edge weights
+
+# O(ElogV)
+
 
 def prims(G):
+
     graph = G.G
     num_nodes = len(G.nodes)
-    pq = []
-    heapq.heappush(pq, (0, -1, list(graph.keys())[0]))
-    visited = set()
     mst = []
+    pq = []
+    start = (0, -1, list(graph.keys())[0])
+    heapq.heappush(pq, start)
+    visited = set()
 
     while pq and len(mst)+1 != num_nodes:
         w, u, v = heapq.heappop(pq)
         if v in visited:
             continue
+        visited.add(v)
         if u != -1:
             mst.append((u, v, w))
-        visited.add(v)
         for nv, nw in graph[v]:
             if nv not in visited:
                 heapq.heappush(pq, (nw, v, nv))
 
-    return reduce(lambda a, b: a+b, [c for _, _, c in mst], 0), [(a, b) for a, b, _ in mst]
+    return reduce(lambda a, b: a+b, [c for _, _, c in mst], 0), [(a, b) for a, b, c in mst]
 
 
 if __name__ == "__main__":
