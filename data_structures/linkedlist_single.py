@@ -1,6 +1,6 @@
 class Node:
     def __init__(self, val):
-        self.val =  val
+        self.val = val
         self.next = None
 
 
@@ -24,7 +24,6 @@ class SingleLinkedList:
         node.next = self.head
         self.head = node
 
-    
     def __str__(self):
         out = ''
         cur = self.head
@@ -32,7 +31,7 @@ class SingleLinkedList:
             out += f'{cur.val} '
             cur = cur.next
         return out
-    
+
     def length(self):
         out = 0
         cur = self.head
@@ -40,17 +39,18 @@ class SingleLinkedList:
             out += 1
             cur = cur.next
         return out
-    
+
     def insert(self, ind, val):
         length = self.length()
-        if ind>length : return
-        elif ind == length: 
+        if ind > length:
+            return
+        elif ind == length:
             self.push(val)
             return
-        if ind == 0: 
+        if ind == 0:
             self.pushLeft(val)
             return
-    
+
         node = Node(val)
         cur = self.head
         for _ in range(ind-1):
@@ -59,23 +59,23 @@ class SingleLinkedList:
             node.next = cur.next
             cur.next = node
 
-    
     def pop(self):
         cur = self.head
-        if not cur: return
+        if not cur:
+            return
         while cur.next and cur.next.next:
             cur = cur.next
         out = cur.next
         cur.next = None
         return out.val
-        
+
     def popLeft(self):
-        if not self.head: return None
+        if not self.head:
+            return None
         out = self.head
         self.head = self.head.next
         return out.val
-    
-    
+
     def remove(self, val):
         cur = self.head
         while cur.next and cur.next.val != val:
@@ -86,7 +86,8 @@ class SingleLinkedList:
 
     def removeAt(self, ind):
         length = self.length()
-        if ind>=length: return
+        if ind >= length:
+            return
         elif ind == length-1:
             self.pop()
             return
@@ -97,23 +98,23 @@ class SingleLinkedList:
         cur = self.head
         for _ in range(ind-1):
             cur = cur.next
-        
+
         cur.next = cur.next.next
-        
-    
+
     def fromEnd(self, ind):
         cur = self.head
         fast = cur
         for _ in range(ind):
             if fast:
                 fast = fast.next
-            else: return
+            else:
+                return
         while fast.next:
             fast = fast.next
             cur = cur.next
         return cur.val
-    
-    def middle(self): 
+
+    def middle(self):
         slow = self.head
         fast = self.head
         while fast and fast.next:
@@ -121,15 +122,16 @@ class SingleLinkedList:
             slow = slow.next
         return slow.val
 
-    def reversePrint(self, node = None): 
+    def reversePrint(self, node=None):
         if not node:
             return
         self.reversePrint(node.next)
         print(node.val, end=' ')
-        if node ==  self.head: print()
+        if node == self.head:
+            print()
         return
 
-    def reverse(self) : 
+    def reverse(self):
         prev = None
         cur = self.head
         while cur:
@@ -138,35 +140,34 @@ class SingleLinkedList:
             prev = cur
             cur = nxt
         self.head = prev
-        
 
     def reverseRecursive(self, head):
         if head and head.next:
             self.reverseRecursive(head.next)
             head.next.next = head
             head.next = None
-        else: 
+        else:
             self.head = head
-
-            
 
     def sum(self):
         total = 0
         cur = self.head
-        while cur :
+        while cur:
             if type(cur.val) is int or type(cur.val) is float:
                 total += cur.val
-            else: return None
+            else:
+                return None
             cur = cur.next
-        
+
         return total
 
     def sumRecursive(self, node):
-        if not node: return 0
+        if not node:
+            return 0
         return node.val + self.sumRecursive(node.next)
 
     def isALoop(self):
-        slow =  self.head
+        slow = self.head
         fast = self.head
         while fast and fast.next:
             fast = fast.next.next
@@ -174,7 +175,7 @@ class SingleLinkedList:
             if slow == fast:
                 return True
         return False
-    
+
     def sortedInsert(self, val):
         node = Node(val)
         cur = self.head
@@ -192,27 +193,34 @@ class SingleLinkedList:
             cur = cur.next
         self.push(val)
         return
-    
+
     def reverseInPairs(self):
         cur = self.head
-        if not cur: return
+        if not cur:
+            return
         prev = None
         nxt = cur.next
         while nxt:
             cur.next = nxt.next
             nxt.next = cur
-            if prev: prev.next = nxt
-            else: self.head = nxt
+            if prev:
+                prev.next = nxt
+            else:
+                self.head = nxt
             prev = cur
             cur = cur.next
-            if cur: nxt = cur.next
-            else: nxt = None
+            if cur:
+                nxt = cur.next
+            else:
+                nxt = None
 
     def isPalindrome(self):
         cur = self.head
-        if not cur: return False
+        if not cur:
+            return False
         length = self.length()
-        if length == 1: return True
+        if length == 1:
+            return True
         slow = cur
         fast = cur
         while True:
@@ -225,7 +233,7 @@ class SingleLinkedList:
         ll2.head = mid.next
         mid.next = None
         ll2.reverse()
- 
+
         cur2 = ll2.head
         for _ in range(ll2.length()):
             if cur.val != cur2.val:
@@ -233,12 +241,12 @@ class SingleLinkedList:
             cur = cur.next
             cur2 = cur2.next
         return True
-    
-    def reverse_k(self,k):
+
+    def reverse_k(self, k):
         head = self.head
         if not head or not head.next or k < 2:
             return head
-        
+
         dummy = Node(0)
         dummy.next = head
         prev_group = dummy
@@ -252,7 +260,7 @@ class SingleLinkedList:
             while cur and count < k:
                 cur = cur.next
                 count += 1
-            
+
             if count == k:
                 cur = cur_group
                 for _ in range(k):
@@ -260,17 +268,16 @@ class SingleLinkedList:
                     cur.next = prev
                     prev = cur
                     cur = nxt
-                
+
                 prev_group.next = prev
                 cur_group.next = nxt
                 prev_group = cur_group
             else:
                 break
-        
+
         self.head = dummy.next
 
-
-    def reverse_k_recursive(self, head,k): # O(n), O(n/k)
+    def reverse_k_recursive(self, head, k):  # O(n), O(n/k)
 
         cur = head
         prev = None
@@ -283,34 +290,37 @@ class SingleLinkedList:
             prev = cur
             cur = nxt
             count += 1
-        
-        if cur: head.next = self.reverse_k_recursive(cur,k)
-        if head is self.head: self.head = prev
+
+        if cur:
+            head.next = self.reverse_k_recursive(cur, k)
+        if head is self.head:
+            self.head = prev
 
         return prev
 
-    def sortedRemoveDuplicates(self): 
+    def sortedRemoveDuplicates(self):
         cur = self.head
-        if not cur: return cur
+        if not cur:
+            return cur
         while cur:
             nxt = cur.next
             while cur and nxt and cur.val == nxt.val:
                 cur.next = nxt.next
                 nxt = nxt.next
             cur = cur.next
-        
 
     def seperateEvenOdd(self):
         cur = self.head
         prev = None
         evenLL = SingleLinkedList()
         while cur:
-            if cur.val%2 == 0:
+            if cur.val % 2 == 0:
                 evenLL.push(cur.val)
                 self.remove(cur.val)
             prev = cur
             cur = cur.next
         prev.next = evenLL.head
+
 
 if __name__ == '__main__':
 
@@ -423,11 +433,11 @@ if __name__ == '__main__':
     value_from_end = linked_list.fromEnd(linked_list.length() - 1)
     # Expected output: value_from_end = 2
     print(f"value_from_end = {value_from_end}")
-    
+
     # Test 22: Print the linked list in reverse order using 'reversePrint'
     linked_list.reversePrint(linked_list.head)
     # Expected output: "3 -> 2 -> 1 -> 5 -> "
-    
+
     # Test 23: Get the middle element using 'middle'
     middle_value = linked_list.middle()
     # Expected output: middle_value = 1
@@ -491,7 +501,6 @@ if __name__ == '__main__':
         # Expected output: ValueError: All values in the list must be numbers
         print(f"Error: {e}")
 
-
     # Test 31: Calculate the sum of the linked list using 'sumRecursive'
     linked_list = SingleLinkedList()
     linked_list.push(6.5)
@@ -504,7 +513,6 @@ if __name__ == '__main__':
     total_sum_recursive = linked_list.sumRecursive(linked_list.head)
     # Expected output: total_sum_recursive = 33.4 (sum of 5 + 1 + 2 + 3 + 6.5 + 8.2 + 9 + 4.7 + 3 + 2)
     print(f"total_sum_recursive = {total_sum_recursive}")
-
 
     # Test 32: Check if the linked list has a loop using 'isALoop'
     print(linked_list.isALoop())
@@ -586,7 +594,7 @@ if __name__ == '__main__':
     linked_list.push(6)
     linked_list.push(6)
     linked_list.push(6)
-    linked_list.push(7) 
+    linked_list.push(7)
     linked_list.sortedRemoveDuplicates()
     print(linked_list)
     # Expected output: 1 2 3 4 5 6 7
@@ -595,4 +603,3 @@ if __name__ == '__main__':
     linked_list.seperateEvenOdd()
     print(linked_list)
     # Expected outcome: 1 3 5 7 2 4 6
-
