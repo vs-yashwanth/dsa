@@ -31,7 +31,7 @@ def method1(A,n):   # O(n), O(n)
     
     return water
 
-def method1_optim(A,n):
+def method1_optim(A,n):   # O(n), O(1)
 
     left_max = right_max = -float('inf')
     i = 0

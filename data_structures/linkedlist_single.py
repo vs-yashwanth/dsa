@@ -565,6 +565,7 @@ if __name__ == '__main__':
     linked_list.push(5)
     linked_list.push(6)
     linked_list.push(7)
+    linked_list.push(8)
     linked_list.reverse_k(3)
     print(linked_list)
     # Expected output: 3 2 1 6 5 4 7
@@ -578,6 +579,7 @@ if __name__ == '__main__':
     linked_list.push(5)
     linked_list.push(6)
     linked_list.push(7)
+    linked_list.push(8)
     linked_list.reverse_k_recursive(linked_list.head, 3)
     print(linked_list)
     # Expected output: 3 2 1 6 5 4 7
