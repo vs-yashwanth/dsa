@@ -1,28 +1,50 @@
-def naive(A,target,n):      # O(n!)
-    if target == 0:
-        return True
-    if n==0:
-        return False
-    if A[n-1] > target:
-        return naive(A,target,n-1)
-    return naive(A,target,n-1) or naive(A,target-A[n-1],n-1)
+def bruteforce(nums, target):  # O(2**n), O(n)
 
-def bottomup(A,target):     # O(n*t)
-    n = len(A)
-    table = [[False for _ in range(target+1)] for _ in range(n+1)]
-    for i in range(n+1):
-        table[i][0] = True
-    for i in range(n+1):
-        for t in range(target+1):
-            if A[i-1] > t:
-                table[i][t] = table[i-1][t]
-            else:
-                table[i][t] = table[i-1][t] or table[i-1][t-A[i-1]]
-    return table[n][target]
-    
+    def backtrack(ind, target):
+        if target == 0:
+            return True
+        if ind == len(nums) or target < 0:
+            return False
 
-A = [3, 34, 4, 12, 5, 2]
-target = 9
-print(naive(A,target,len(A)))
-print(bottomup(A,target))
-    
+        return backtrack(ind+1, target) or backtrack(ind+1, target-nums[ind])
+
+    return backtrack(0, target)
+
+
+def topdown(nums, target):  # O(n * target), O(n * target)
+    memo = {}
+
+    def dp(ind, target):
+        if target == 0:
+            return True
+        if ind == len(nums) or target < 0:
+            return False
+        if (ind, target) in memo:
+            return memo[(ind, target)]
+
+        memo[(ind, target)] = dp(
+            ind+1, target) or dp(ind+1, target-nums[ind])
+        return memo[(ind, target)]
+
+    return dp(0, target)
+
+
+def bottomup(nums, target):  # O(n * target), O(target)
+
+    dp = [False] * (target+1)
+    dp[0] = True
+
+    for num in nums:
+        for t in range(target, 0, -1):
+            if num <= target:
+                dp[t] = dp[t] or dp[t - num]
+
+    return dp[target]
+
+
+if __name__ == '__main__':
+
+    subsetsum = topdown
+    print(subsetsum([1, 2, 3, 7], 6))
+    print(subsetsum([1, 2, 7, 1, 5], 10))
+    print(subsetsum([1, 3, 4, 8], 6))

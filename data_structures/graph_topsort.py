@@ -1,6 +1,7 @@
 # where some events might occur before others
 # cyclic graphs cannot be topologically sorted
 
+from collections import deque
 from collections import defaultdict
 from graph import Graph
 
@@ -13,6 +14,8 @@ def topological_sort(g, weighted=False):
         if u not in visited:
             dfs(u, graph, visited, out, weighted)
     return out[::-1]
+
+# https://leetcode.com/problems/course-schedule-ii/submissions/1196043806/
 
 
 def dfs(u, graph, visited, out, weighted):
@@ -28,6 +31,34 @@ def dfs(u, graph, visited, out, weighted):
     out.append(u)
 
 
+def khans_algo(G):  # O(v+e), O(v)
+    graph = G.G
+    indegrees = defaultdict(int)
+    queue = deque()
+    out = []
+
+    for u in list(graph.keys()):
+        for v in graph[u]:
+            indegrees[v] += 1
+
+    for node in G.nodes:
+        if indegrees[node] == 0:
+            queue.append(node)
+
+    while queue:
+        cur = queue.popleft()
+        out.append(cur)
+        for v in graph[cur]:
+            indegrees[v] -= 1
+            if indegrees[v] == 0:
+                queue.append(v)
+
+    if len(out) != len(G.nodes):
+        return -1
+
+    return out
+
+
 if __name__ == '__main__':
 
     G = Graph()
@@ -39,5 +70,8 @@ if __name__ == '__main__':
     G.add_edge(2, 3)
     G.add_edge(2, 4)
     G.add_edge(2, 5)
-    print(topological_sort(G))
-    G.visualize()
+
+    top = khans_algo
+
+    print(top(G))
+    #G.visualize()

@@ -1,42 +1,62 @@
-def recursive(weights,values,W,n):         # O(2**n), O(1)
-    if n == 0 or W==0:
-        return 0
-    
-    if weights[n-1] > W:
-        return recursive(weights, values, W,n-1)
+def recursive(weights, values, capacity):         # O(2**n), O(1)
 
-    return max(values[n-1] + recursive(weights,values,W-weights[n-1],n-1) , 
-                recursive(weights, values, W,n-1))
+    def dp(capacity, profit, ind):
 
-def memoized(weights,values,W,n,memo = {}):     # O(n*W), O(n*W)
-    key = f'{W},{n}'
-    if key in memo:
-        return memo[key]
-    if n==0 or W==0:
-        return 0
-    if weights[n-1] > W:
-        memo[key] = memoized(weights,values,W,n-1,memo)
-        return memo[key]
-    memo[key] = max(values[n-1]+memoized(weights,values,W-weights[n-1],n-1),
-                    memoized(weights, values, W, n-1))
-    return memo[key]
-    
-def bottomup(weights,values,W,n):
-    table = [[0 for _ in range(W+1)] for _ in range(n+1)]
-    for i in range(1,n+1):
-        for j in range(1,W+1):
-            if weights[i-1] <= j:
-                table[i][j] = max(values[i-1] + table[i-1][j-weights[i-1]],
-                                table[i-1][j])
+        if ind == len(values):
+            return profit
+
+        using = 0
+        if capacity >= weights[ind]:
+            using = dp(capacity-weights[ind], profit + values[ind], ind+1)
+        not_using = dp(capacity, profit, ind+1)
+
+        return max(using, not_using)
+
+    return dp(capacity, 0, 0)
+
+
+def memoized(weights, values, capacity):     # O(n*W), O(n*W)
+    memo = {}
+
+    def dp(capacity, profit, ind):
+
+        if (capacity, ind) in memo:
+            return memo[(capacity, ind)]
+
+        if ind == len(values):
+            return profit
+
+        using = 0
+        if capacity >= weights[ind]:
+            using = dp(capacity-weights[ind], profit + values[ind], ind+1)
+        not_using = dp(capacity, profit, ind+1)
+
+        memo[(capacity, ind)] = max(using, not_using)
+        return max(using, not_using)
+
+    return dp(capacity, 0, 0)
+
+
+def bottomup(weights, prices, capacity):  # O(n*W), O(n*W)
+
+    dp = [[0 for _ in range(capacity+1)] for _ in range(len(prices))]
+    for i in range(len(prices)):
+        for c in range(1, capacity+1):
+            if i == 0 and weights[i] <= c:
+                dp[i][c] = prices[i]
+                continue
+            if weights[i] > c:
+                dp[i][c] = dp[i-1][c]
             else:
-                table[i][j] = table[i-1][j]
-    return table[n][W]
+                dp[i][c] = max(dp[i-1][c], prices[i] + dp[i-1][c-weights[i]])
+
+    return dp[i][capacity]
 
 if __name__ == '__main__':
-    val = [60, 100, 120]
-    wt = [10, 20, 30]
-    W = 50
+    val = [4, 5, 3, 7]
+    wt = [2, 3, 1, 4]
+    W = 5
     n = len(val)
-    print(recursive( wt, val,W, n))
-    print(memoized( wt, val,W, n))
-    print(bottomup( wt, val,W, n))
+    print(recursive(wt, val, W))
+    print(memoized(wt, val, W))
+    print(bottomup(wt, val, W))
