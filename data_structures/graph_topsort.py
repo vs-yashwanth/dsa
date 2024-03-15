@@ -5,30 +5,37 @@ from collections import deque
 from collections import defaultdict
 from graph import Graph
 
+# https://leetcode.com/problems/course-schedule-ii/submissions/1196043806/
+
 
 def topological_sort(g, weighted=False):
     graph = g.G
     visited = set()
-    out = []
+    visiting = set()
+    order = []
+
+    def dfs(u):
+        visited.add(u)
+        visiting.add(u)
+    
+        for v in graph[u]:
+            if weighted:
+                v, w = v
+            if v not in visited:
+                if dfs(v):
+                    return True
+            elif v in visiting:
+                return True
+
+        visiting.discard(u)
+        order.append(u)
+
     for u in list(graph.keys()):
         if u not in visited:
-            dfs(u, graph, visited, out, weighted)
-    return out[::-1]
+            if dfs(u):
+                return -1
 
-# https://leetcode.com/problems/course-schedule-ii/submissions/1196043806/
-
-
-def dfs(u, graph, visited, out, weighted):
-    visited.add(u)
-    if weighted:
-        for v, w in graph[u]:
-            if v not in visited:
-                dfs(v, graph, visited, out, weighted)
-    else:
-        for v in graph[u]:
-            if v not in visited:
-                dfs(v, graph, visited, out, weighted)
-    out.append(u)
+    return order[::-1]
 
 
 def khans_algo(G):  # O(v+e), O(v)
@@ -71,7 +78,7 @@ if __name__ == '__main__':
     G.add_edge(2, 4)
     G.add_edge(2, 5)
 
-    top = khans_algo
+    top = topological_sort
 
     print(top(G))
-    #G.visualize()
+    # G.visualize()

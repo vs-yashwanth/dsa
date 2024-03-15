@@ -33,4 +33,4 @@ if __name__ == "__main__":
     g.add_edge(5, 1)
 
     print(connected_components(g))
-    g.visualize()
+    #g.visualize()

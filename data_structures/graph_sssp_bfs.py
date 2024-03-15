@@ -1,6 +1,7 @@
 # shortest distance between 2 nodes
 from graph import Graph
 from helpers import QueueWithArray
+from collections import deque
 
 # For unweighted graphs or graphs with equal weights
 # use Dijkstra for weighted graphs
@@ -15,24 +16,21 @@ from helpers import QueueWithArray
 
 
 def shortest_distance(graph, n1, n2):
+
+    graph = graph.G
+    queue = deque()
+    queue.append((n1, 0))
     visited = set()
-    distance = 0
-    queue = QueueWithArray()
-    queue.enqueue(n1)
-    aux = []
-    while not queue.is_empty():
-        node = queue.dequeue()
-        if node == n2:
-            return distance
-        visited.add(node)
-        for neigh in graph.G[node]:
-            if neigh not in visited:
-                aux.append(neigh)
-        if queue.is_empty():
-            distance += 1
-            for i in aux:
-                queue.enqueue(i)
-            aux.clear()
+
+    while queue:
+        u, d = queue.popleft()
+        if u == n2:
+            return d
+        visited.add(u)
+        for v in graph[u]:
+            if v not in visited:
+                queue.append((v, d+1))
+
     return -1
 
 

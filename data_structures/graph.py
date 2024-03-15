@@ -85,4 +85,4 @@ if __name__ == '__main__':
 
     print(G.dfs(5))
     print(G.bfs(0))
-    G.visualize()
+    #G.visualize()

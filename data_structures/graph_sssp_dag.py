@@ -4,6 +4,9 @@ from graph_topsort import topological_sort
 
 # O(V + E)
 
+# for directed acyclic graphs, as there are no cycles, there is only 1 path to each vertex. so its enough to process them
+# in topological order
+
 # why topological works : topological sorting ensures in an edge u,v , u is procesed before v. So as we update distances
 # of nodes, if we first update the distance of each u before its v, the computed dist of v will be more accurate. If we
 # process v before u, if the dist of u later updates to a smaller dist, we wouldn't be able to reflect that in the dist of v.

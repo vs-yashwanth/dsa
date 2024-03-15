@@ -79,7 +79,7 @@ if __name__ == '__main__':
     g1.add_edge(3, 4)
     g1.add_edge(4, 1)
     print(eulerian_path_directed(g1))
-    #g1.visualize()
+    # g1.visualize()
     # Expected Output: Eulerian Path: [4, 1, 2, 0, 1, 3, 4]
 
     g2 = Graph()
@@ -89,7 +89,7 @@ if __name__ == '__main__':
     g2.add_edge(3, 0)
     g2.add_edge(3, 1)
     print(eulerian_path_directed(g2))
-    #g2.visualize()
+    # g2.visualize()
     # Expected Output: Eulerian Path: [3, 1, 2, 3, 0, 1]
 
     g3 = Graph()
@@ -100,7 +100,7 @@ if __name__ == '__main__':
     g3.add_edge(0, 2)
     print(eulerian_path_directed(g3))
     # Expected Output: [0, 2, 3, 0, 1, 2]
-    #g3.visualize()
+    # g3.visualize()
 
     g4 = Graph()
     g4.add_edge(0, 1)
@@ -111,7 +111,7 @@ if __name__ == '__main__':
     g4.add_edge(4, 2)
     print(eulerian_path_directed(g4))
     # Expected Output: [4, 2, 3, 0, 1, 2, 4]
-    #g4.visualize()
+    # g4.visualize()
 
     g5 = Graph()
     g5.add_edge(0, 1)
@@ -122,8 +122,15 @@ if __name__ == '__main__':
     g5.add_edge(2, 1)
     g5.add_edge(1, 3)
     print(eulerian_path_directed(g5))
-    #g5.visualize()
+    # g5.visualize()
     # Expected Output: Eulerian Path: [0, 2, 1, 3, 0, 1, 2, 3]
+
+    g6 = Graph()
+    g6.add_edge(0, 1)
+    g6.add_edge(0, 2)
+    g6.add_edge(2, 0)
+    print(eulerian_path_directed(g6))
+    # Expected Output: [0, 2, 0, 1]
 
 
 # useful links

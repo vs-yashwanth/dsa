@@ -15,20 +15,18 @@ def sssp_dijkstra(G, start):
     dist = [float('inf')]*n
     dist[start] = 0
     prev = {}
+    
     priority_queue = []
-    visited = set()
-
     pq.heappush(priority_queue, (0, start))
+
     while priority_queue:
         d, u = pq.heappop(priority_queue)
-        visited.add(u)
 
         for v, w in graph[u]:
-            if v not in visited:
-                if d+w < dist[v]:
-                    dist[v] = d+w
-                    pq.heappush(priority_queue, (d+w, v))
-                    prev[v] = u
+            if d+w < dist[v]:
+                dist[v] = d+w
+                pq.heappush(priority_queue, (d+w, v))
+                prev[v] = u
     return dist, prev
 
 
