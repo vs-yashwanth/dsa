@@ -1,3 +1,4 @@
+# partition the set into two subsets with a minimum difference between their subset sums.
 
 def bruteforce(nums):  # O(2**n), O(n)
     total = sum(nums)
@@ -7,9 +8,7 @@ def bruteforce(nums):  # O(2**n), O(n)
             return abs(cur_sum - (total - cur_sum))
 
         not_using = backtrack(cur_sum, i+1)
-        using = cur_sum
-        if cur_sum + nums[i] < total:
-            using = backtrack(cur_sum + nums[i], i+1)
+        using = backtrack(cur_sum + nums[i], i+1)
 
         return min(using, not_using)
 
@@ -17,31 +16,56 @@ def bruteforce(nums):  # O(2**n), O(n)
 
 
 def topdown(nums):  # O(n * sum), O(n * sum)
-    memo = {}
+
+    n = len(nums)
     total = sum(nums)
+    memo = {}
 
-    def dp(cur_sum, i):
+    def recursive(i, cur_sum):
 
-        if i == len(nums):
-            return abs(cur_sum - (total - cur_sum))
+        if i == n:
+            return abs(total - 2 * cur_sum)
 
         if (i, cur_sum) in memo:
             return memo[(i, cur_sum)]
 
-        not_using = dp(cur_sum, i+1)
-        using = cur_sum
-        if cur_sum + nums[i] < total:
-            using = dp(cur_sum + nums[i], i+1)
+        sub1 = recursive(i + 1, cur_sum + nums[i])
+        sub2 = recursive(i + 1, cur_sum)
 
-        memo[(i, cur_sum)] = min(using, not_using)
+        memo[(i, cur_sum)] = min(sub1, sub2)
         return memo[(i, cur_sum)]
+
+    return recursive(0, 0)
+
+
+# add members of the first set and subtract members of the 2nd set
+
+
+def topdown2(nums):  # O(n * sum), O(n * sum)
+
+    n = len(nums)
+    memo = {}
+
+    def dp(i, diff):
+
+        if i == n:
+            return abs(diff)
+
+        if (i, diff) in memo:
+            return memo[(i, diff)]
+
+        s1 = dp(i + 1, diff + nums[i])
+        s2 = dp(i + 1, diff - nums[i])
+
+        memo[(i, diff)] = min(s1, s2)
+        return memo[(i, diff)]
 
     return dp(0, 0)
 
 # for each num add it to the first or sec set and get the min achieved
 
 
-def topdown2(nums):   # O(n * sum), O(n * sum)
+def topdown3(nums):   # O(n * sum), O(n * sum)
     memo = {}
     total = sum(nums)
 
@@ -86,7 +110,7 @@ def bottomup(nums):  # O(n * sum), O(n)
 
 if __name__ == '__main__':
 
-    min_subset_sum_diff = bottomup
+    min_subset_sum_diff = topdown3
 
     print(min_subset_sum_diff([1, 2, 3, 9]))  # 3
     print(min_subset_sum_diff([1, 2, 7, 1, 5]))   # 0
