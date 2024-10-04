@@ -1,6 +1,7 @@
 # 0 indexed Binary Indexed Tree / Fenwick tree
 # https://cp-algorithms.com/data_structures/fenwick.html
 # https://www.topcoder.com/thrive/articles/Binary%20Indexed%20Trees
+# https://cs.stackexchange.com/questions/10538/bit-what-is-the-intuition-behind-a-binary-indexed-tree-and-how-was-it-thought-a
 
 class BIT:
     def __init__(self, n):
